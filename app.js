@@ -8,11 +8,12 @@ const port = process.env.PORT||8080
 dotenv.config()
 
 //import routes
-
+const postGetRoutes = require('./routes/posts')
 
 // middleware
 app.use(parser.json())
 app.use(morgan('dev'))
+app.use('/',postGetRoutes)
 
 //db
 
@@ -24,7 +25,5 @@ mongoose.connect(process.env.MONGO_DB_URI,{useNewUrlParser : true}, () =>{
 
 //Port Listen
 app.listen(port, () =>{
-    console.log('Node JS Application Listening on' + `${port}`)
-}).catch(err =>{
-    console.log(err)
+    console.log('Node JS Application Listening on' + ' ' + `${port}`)
 })
