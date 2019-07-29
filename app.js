@@ -5,6 +5,8 @@ const dotenv = require('dotenv')
 const mongoose = require('mongoose')
 const parser = require('body-parser')
 const port = process.env.PORT||8080
+const expressValidator = require('express-validator')
+
 dotenv.config()
 
 //import routes
@@ -14,6 +16,7 @@ const postGetRoutes = require('./routes/posts')
 app.use(parser.json())
 app.use(morgan('dev'))
 app.use('/',postGetRoutes)
+app.use(expressValidator())
 
 //db
 
