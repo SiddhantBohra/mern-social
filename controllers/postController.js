@@ -9,23 +9,20 @@ getPosts = (req, res) => {
 createPost = (req, res) => {
     const post = new Post(req.body);
     console.log("CREATE POST: ", post)
-    post.save().then( (result, error) => {
-        if (error) {
-            res.status(400).json({
-                error
-            })
-        }
-        else
-        {
-            res.status(200).json({
-                message : "Success",
-                post : result
-            })
-        }
+    
+    post.save().then((result, error) => {
+        res.status(200).json({
+            message: "Success",
+            post: result
+        })
+    }).catch(error =>{
+        res.status(400).json({
+            error
+        })
     })
 }
 
-    module.exports = {
-        getPosts,
-        createPost
-    }
+module.exports = {
+    getPosts,
+    createPost
+}

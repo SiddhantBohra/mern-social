@@ -13,10 +13,11 @@ dotenv.config()
 const postGetRoutes = require('./routes/posts')
 
 // middleware
-app.use(parser.json())
+app.use(expressValidator())
+app.use(express.json())
+app.use(parser.urlencoded({extended : true}))
 app.use(morgan('dev'))
 app.use('/',postGetRoutes)
-app.use(expressValidator())
 
 //db
 
