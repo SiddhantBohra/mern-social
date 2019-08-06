@@ -13,7 +13,7 @@ dotenv.config()
 //import routes
 const postGetRoutes = require('./routes/posts')
 const authRoutes = require('./routes/auth')
-
+const userRoutes = require('./routes/user')
 // middleware
 app.use(expressValidator())
 app.use(express.json())
@@ -22,6 +22,7 @@ app.use(cookieParser())
 app.use(morgan('dev'))
 app.use('/', postGetRoutes)
 app.use('/', authRoutes)
+app.use('/',userRoutes)
 app.use((err, req, res, next) => {
     if (err.name === 'UnauthorizedError') {
         res.status(401).json({ error: "Unauthorized Token" });
