@@ -11,6 +11,7 @@ dotenv.config()
 
 //import routes
 const postGetRoutes = require('./routes/posts')
+const authRoutes = require('./routes/auth')
 
 // middleware
 app.use(expressValidator())
@@ -18,6 +19,7 @@ app.use(express.json())
 app.use(parser.urlencoded({extended : true}))
 app.use(morgan('dev'))
 app.use('/',postGetRoutes)
+app.use('/',authRoutes)
 
 //db
 
