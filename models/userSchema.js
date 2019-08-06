@@ -26,28 +26,35 @@ const userSchema = new mongoose.Schema({
 });
 
 //Virtual Field
-userSchema.virtual('password')
-    .set(password => {
-        this._password = password
-        this.salt = uuidv1()
-        this.hashed_password = this.encryptPassword(password)
+userSchema
+    .virtual("password")
+    .set(function (password) {
+        // create temporary variable called _password
+        this._password = password;
+        // generate a timestamp
+        this.salt = uuidv1();
+        // encryptPassword()
+        this.hashed_password = this.encryptPassword(password);
     })
-    .get(() => {
-        return this.password
-    })
+    .get(function () {
+        return this._password;
+    });
+// methods
 userSchema.methods = {
-    encryptPassword: password => {
-        if (!password) {
-            return ""
-        }
+    authenticate: function (plainText) {
+        return this.encryptPassword(plainText) === this.hashed_password;
+    },
+
+    encryptPassword: function (password) {
+        if (!password) return "";
         try {
-           return crypto.createHmac('sha256', secret)
+            return crypto
+                .createHmac("sha1", this.salt)
                 .update(password)
-                .digest('hex');
-        }
-        catch{
+                .digest("hex");
+        } catch (err) {
             return "";
         }
     }
-}
+};
 module.exports = mongoose.model("User", userSchema)
