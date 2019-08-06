@@ -49,14 +49,32 @@ const updateUser = (req, res, next) => {
         else {
             user.hashed_password = undefined
             user.salt = undefined
-            res.json({user})
+            res.json({ user })
         }
     })
 }
+const deleteUser = (req, res) => {
+    let user = req.profile
+    user.remove((err, user) => {
+        if (err) {
+            return res.status(400).json({
+                error: err
+            })
+        }
+        else {
+            user.hashed_password = undefined
+            user.salt = undefined
+            res.json({ message : "User Deleted Successfully" })
+        }
+
+    })
+}
+
 module.exports = {
     userById,
     hasAuthorization,
     allUsers,
     getUser,
-    updateUser
+    updateUser,
+    deleteUser
 }
