@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const postController = require("../controllers/postController")
+const {getPosts,createPost} = require("../controllers/postController")
 const validator = require('../validators/index')
 
-router.get("/", postController.getPosts)
+router.get("/", getPosts)
 
-router.post("/post",[validator.createPostValidator], postController.createPost)
+router.post("/post",[validator.createPostValidator], createPost)
 
 module.exports = router
