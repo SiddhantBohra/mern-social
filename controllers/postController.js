@@ -3,13 +3,13 @@ const mongoose = require('mongoose')
 const MongoClient = require('mongodb').MongoClient
 const formidable = require('formidable')
 const fs = require('fs')
+const _ = require('lodash')
 
 getPosts = (req, res) => {
     Post.find().populate("postedBy", "_id name").select("_id title body").then(posts => {
         res.status(200).json({
             posts: posts
         })
-
     })
 }
 
@@ -59,16 +59,13 @@ postByUser = (req, res) => {
 const postById = (req, res, next, id) => {
     Post.findById(id).populate("postedBy", "_id name").then(posts => {
         req.post = posts
-        console.log(req.post)
+      //  console.log(req.post)
         next();
     })
 }
 const isPoster = (req, res, next) => {
     let poster = req.post && req.auth && req.post.postedBy._id == req.auth._id
-    console.log("req.post:", req.post)
-    console.log("req.auth:", req.auth)
-    console.log("req.post.postedBy._id:", req.post.postedBy._id)
-    console.log("req.auth._id:", req.auth._id)
+    console.log(poster)
     if (!poster) {
         return res.status(403).json({
             error: "User is not authorized"
@@ -91,11 +88,26 @@ const deletePost = (req, res) => {
         }
     })
 }
+const updatePost = (req , res) => {
+    let post = req.post
+    post = _.extend(post , req.body)
+    post.updated = Date.now()
+    post.save().then(post =>{
+        res.json(post);
+    }).catch(error =>{
+        res.status(400).json({
+            error : err
+        })
+    })
+}
+
+
 module.exports = {
     getPosts,
     createPost,
     postByUser,
     postById,
     isPoster,
-    deletePost
+    deletePost,
+    updatePost
 }

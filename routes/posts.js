@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { getPosts, createPost, postByUser, postById, isPoster, deletePost } = require("../controllers/postController")
+const { getPosts, createPost, postByUser, postById, isPoster, deletePost,updatePost } = require("../controllers/postController")
 const { createPostValidator } = require('../validators/index')
 const { requireSignIn } = require('../controllers/authController')
 const { userById } = require('../controllers/userController')
@@ -15,6 +15,8 @@ router.post("/post/new/:userId",
 router.get('/', getPosts)
 router.get("/posts/by/:userId", postByUser)
 router.delete("/post/:postId",requireSignIn,isPoster,deletePost)
+router.put("/post/:postId",requireSignIn,isPoster,updatePost)
+
 router.param('userId', userById)
 router.param('postId', postById)
 
