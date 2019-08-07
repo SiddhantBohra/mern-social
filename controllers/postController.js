@@ -1,9 +1,11 @@
 const Post = require('../models/postSchema')
+const mongoose = require('mongoose')
+const MongoClient = require('mongodb').MongoClient
 const formidable = require('formidable')
 const fs = require('fs')
 
 getPosts = (req, res) => {
-    const post = Post.find().then(posts => {
+    Post.find().populate("postedBy", "_id name").select("_id title body").then(posts => {
         res.status(200).json({
             posts: posts
         })
@@ -13,6 +15,7 @@ getPosts = (req, res) => {
 
 createPost = (req, res) => {
     let form = new formidable.IncomingForm()
+    form.type
     form.keepExtensions = true
     form.parse(req, (err, fields, files) => {
         if (err) {
@@ -41,8 +44,21 @@ createPost = (req, res) => {
         })
     })
 }
+postByUser = (req, res) => {
+    console.log(req.profile._id)
+    // Post.find().then(posts,err =>{
+    //     res.json(posts)
+    // })
+    Post.find({postedBy : {_id : req.profile._id}}).populate("postedBy", "_id name").sort({created : 1}).then(posts => {
+        console.log(posts)
+        res.status(200).json({
+            posts: posts
+        })
+    })
+}
 
 module.exports = {
     getPosts,
-    createPost
+    createPost,
+    postByUser
 }
