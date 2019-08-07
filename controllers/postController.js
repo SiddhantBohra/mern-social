@@ -49,16 +49,53 @@ postByUser = (req, res) => {
     // Post.find().then(posts,err =>{
     //     res.json(posts)
     // })
-    Post.find({postedBy : {_id : req.profile._id}}).populate("postedBy", "_id name").sort({created : 1}).then(posts => {
+    Post.find({ postedBy: { _id: req.profile._id } }).populate("postedBy", "_id name").sort({ created: 1 }).then(posts => {
         console.log(posts)
         res.status(200).json({
             posts: posts
         })
     })
 }
-
+const postById = (req, res, next, id) => {
+    Post.findById(id).populate("postedBy", "_id name").then(posts => {
+        req.post = posts
+        console.log(req.post)
+        next();
+    })
+}
+const isPoster = (req, res, next) => {
+    let poster = req.post && req.auth && req.post.postedBy._id == req.auth._id
+    console.log("req.post:", req.post)
+    console.log("req.auth:", req.auth)
+    console.log("req.post.postedBy._id:", req.post.postedBy._id)
+    console.log("req.auth._id:", req.auth._id)
+    if (!poster) {
+        return res.status(403).json({
+            error: "User is not authorized"
+        })
+    }
+    next();
+}
+const deletePost = (req, res) => {
+    let post = req.post
+    post.remove((err, post) => {
+        if (err) {
+            return res.status(400).json({
+                error: err
+            })
+        }
+        else {
+            res.json({
+                message: "Post Deleted Successfully"
+            })
+        }
+    })
+}
 module.exports = {
     getPosts,
     createPost,
-    postByUser
+    postByUser,
+    postById,
+    isPoster,
+    deletePost
 }
