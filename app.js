@@ -8,6 +8,7 @@ const port = process.env.PORT || 8080
 const cookieParser = require('cookie-parser')
 const expressValidator = require('express-validator')
 const fs = require('fs')
+const cors = require('cors')
 dotenv.config()
 
 //import routes
@@ -21,6 +22,7 @@ app.use(parser.urlencoded({ extended: true }))
 app.use(parser.json())
 app.use(cookieParser())
 app.use(morgan('dev'))
+app.use(cors())
 app.use('/', postGetRoutes)
 app.use('/', authRoutes)
 app.use('/',userRoutes)
