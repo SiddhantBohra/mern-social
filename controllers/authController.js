@@ -21,7 +21,7 @@ const signin = (req, res) => {
     User.findOne({ email }, (err, user) => {
         if (err || !user) {
             return res.status(401).json({
-                error: "User with this Email does not exist, Please Sign in Again"
+                error: "User with this Email does not exist, Please Signup Again"
             })
         }
         if (!user.authenticate(password)) {
